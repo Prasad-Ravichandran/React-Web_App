@@ -1,0 +1,51 @@
+:root {
+  --toggle-button-dark: #242b37;
+  --toggle-button-light: #f2f2f7;
+
+  --bg-dark-img: url(./images/bg-dark-theme.png);
+  --bg-light-img: url(./images/bg-light-theme.png);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  width: 100vw;
+  height: 100vh;
+
+  background-image: var(--bg-dark-img);
+  background-size: cover;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+
+  max-width: 1000px;
+  margin: auto;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 30px;
+}
+
+header > button {
+  background-color: var(--toggle-button-dark);
+
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
