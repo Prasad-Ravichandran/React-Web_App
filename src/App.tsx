@@ -30,7 +30,24 @@ function App() {
     const input = document.getElementById("searchbar") as HTMLInputElement;
     const btn = document.getElementById("button");
     const map = mapRef.current;
+    const ipEl = document.getElementById("ip-address");
+    const locEl = document.getElementById("location");
+    const tzEl = document.getElementById("timezone");
+    const ispEl = document.getElementById("isp");
+
     if (!input || !btn || !map) return;
+
+    const setInfo = (
+      ip?: string,
+      location?: string,
+      timezone?: string,
+      isp?: string
+    ) => {
+      if (ipEl) ipEl.textContent = ip || "-";
+      if (locEl) locEl.textContent = location || "-";
+      if (tzEl) tzEl.textContent = timezone ? `UTC${timezone}` : "-";
+      if (ispEl) ispEl.textContent = isp || "-";
+    };
 
     const handle = async () => {
       const query = input.value.trim();
@@ -44,6 +61,22 @@ function App() {
         const data = await res.json();
         const lat = data?.location?.lat;
         const lng = data?.location?.lng;
+        const city =
+          data?.location?.city ||
+          `${data?.location?.region || ""} ${
+            data?.location?.country || ""
+          }`.trim();
+        const timezone = data?.location?.timezone || "";
+        const isp = data?.isp || "";
+        const ip = data?.ip || "";
+
+        setInfo(ip, city || "-", timezone, isp);
+
+        const map = mapRef.current;
+        if (!map) {
+          console.warn("Map not initialized yet; skipping marker update.");
+          return;
+        }
 
         if (typeof lat === "number" && typeof lng === "number") {
           map.setView([lat, lng], 13);
@@ -57,6 +90,7 @@ function App() {
         }
       } catch (err) {
         console.error(err);
+        setInfo("-", "-", "-", "-");
       }
     };
 

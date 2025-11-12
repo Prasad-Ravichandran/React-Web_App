@@ -1,4 +1,5 @@
 @import "leaflet/dist/leaflet.css";
+
 * {
   margin: 0;
   padding: 0;
@@ -50,9 +51,90 @@
   background-color: #000000;
 }
 
+@media screen and (max-width: 960px) {
+  #back {
+    height: 30vh;
+    width: 100%;
+    z-index: 999;
+  }
+
+  #heading1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    margin-left: 12%;
+    top: 5%;
+  }
+
+  #searchbar {
+    height: 6vh;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 73vw;
+    left: 30px;
+  }
+
+  #button {
+    height: 6vh;
+    width: 10vw;
+    left: 80%;
+  }
+
+  #info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: absolute;
+    top: 10%; /*adjust if needed so it sits below the inputs */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 760px;
+    z-index: 999;
+    margin: 0;
+    padding: 12px;
+    background-color: #fff;
+    background-size: contain;
+    min-height: 400px;
+    gap: 10px;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+
+    font-size: 20px;
+    text-align: center;
+    color: #000000;
+  }
+
+  #map {
+    height: 50vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    z-index: 2;
+  }
+}
+
 #map {
   height: 60vh;
   width: 100%;
   position: relative;
   display: flex;
+  z-index: 2;
+}
+
+#info {
+  display: flex;
+  height: 40px;
+  width: 100%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: 15%;
+  background-color: transparent;
 }
