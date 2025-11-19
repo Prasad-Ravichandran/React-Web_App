@@ -1,13 +1,21 @@
 import "./App.css";
 import L from "leaflet";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
-  const apiKey = `at_ORYrC6qERueYVjqw80pPsTJRqV4QM`;
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // initialize map once (uses the #map element from index.html)
+  const [ipInfo, setIpInfo] = useState({
+    ip: "-",
+    location: "-",
+    timezone: "-",
+    isp: "-",
+  });
+  const apiKey = import.meta.env.VITE_IPIFY_API_KEY;
+
+  // initialize map once
   useEffect(() => {
     const el = document.getElementById("map") as HTMLDivElement;
     if (!el) return;
@@ -25,84 +33,108 @@ function App() {
     };
   }, []);
 
-  // attach listeners to the static input/button and update map on search
-  useEffect(() => {
-    const input = document.getElementById("searchbar") as HTMLInputElement;
-    const btn = document.getElementById("button");
-    const map = mapRef.current;
-    const ipEl = document.getElementById("ip-address");
-    const locEl = document.getElementById("location");
-    const tzEl = document.getElementById("timezone");
-    const ispEl = document.getElementById("isp");
+  // handle search and update map
+  const handleSearch = async () => {
+    const query = searchQuery.trim();
+    if (!query) return;
 
-    if (!input || !btn || !map) return;
+    try {
+      const res = await fetch(
+        `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=${encodeURIComponent(
+          query
+        )}`
+      );
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
 
-    const setInfo = (
-      ip?: string,
-      location?: string,
-      timezone?: string,
-      isp?: string
-    ) => {
-      if (ipEl) ipEl.textContent = ip || "-";
-      if (locEl) locEl.textContent = location || "-";
-      if (tzEl) tzEl.textContent = timezone ? `UTC${timezone}` : "-";
-      if (ispEl) ispEl.textContent = isp || "-";
-    };
+      const data = await res.json();
+      const lat = data?.location?.lat;
+      const lng = data?.location?.lng;
+      const city =
+        data?.location?.city ||
+        `${data?.location?.region || ""} ${
+          data?.location?.country || ""
+        }`.trim();
+      const timezone = data?.location?.timezone || "";
+      const isp = data?.isp || "";
+      const ip = data?.ip || "";
 
-    const handle = async () => {
-      const query = input.value.trim();
-      if (!query) return;
-      try {
-        const res = await fetch(
-          `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=${encodeURIComponent(
-            query
-          )}`
-        );
-        const data = await res.json();
-        const lat = data?.location?.lat;
-        const lng = data?.location?.lng;
-        const city =
-          data?.location?.city ||
-          `${data?.location?.region || ""} ${
-            data?.location?.country || ""
-          }`.trim();
-        const timezone = data?.location?.timezone || "";
-        const isp = data?.isp || "";
-        const ip = data?.ip || "";
+      // update state with fetched data
+      setIpInfo({
+        ip: ip || "-",
+        location: city || "-",
+        timezone: timezone ? `UTC${timezone}` : "-",
+        isp: isp || "-",
+      });
 
-        setInfo(ip, city || "-", timezone, isp);
-
-        const map = mapRef.current;
-        if (!map) {
-          console.warn("Map not initialized yet; skipping marker update.");
-          return;
-        }
-
-        if (typeof lat === "number" && typeof lng === "number") {
-          map.setView([lat, lng], 13);
-          if (markerRef.current) {
-            markerRef.current.setLatLng([lat, lng]);
-          } else {
-            markerRef.current = L.marker([lat, lng]).addTo(map);
-          }
-        } else {
-          console.error("Invalid location in API response", data);
-        }
-      } catch (err) {
-        console.error(err);
-        setInfo("-", "-", "-", "-");
+      // update map
+      const map = mapRef.current;
+      if (!map) {
+        console.warn("Map not initialized yet");
+        return;
       }
-    };
 
-    btn.addEventListener("click", handle);
+      if (typeof lat === "number" && typeof lng === "number") {
+        map.setView([lat, lng], 13);
+        if (markerRef.current) {
+          markerRef.current.setLatLng([lat, lng]);
+        } else {
+          markerRef.current = L.marker([lat, lng]).addTo(map);
+        }
+      } else {
+        console.error("Invalid location in API response", data);
+      }
+    } catch (err) {
+      console.error(err);
+      setIpInfo({ ip: "-", location: "-", timezone: "-", isp: "-" });
+    }
+  };
 
-    return () => {
-      btn.removeEventListener("click", handle);
-    };
-  }, [apiKey]);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
-  // do not render any DOM from React (map and controls are in index.html)
-  return null;
+  return (
+    <main>
+      <>
+        <img
+          src="./src/assets/images/pattern-bg-desktop.png"
+          alt="pic"
+          id="back"
+        />
+        <h1 id="heading1">IP Address Tracker</h1>
+        <input
+          id="searchbar"
+          type="text"
+          placeholder="Search for any IP address or domain"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <button id="button" onClick={handleSearch}>
+          <img src="./src/assets/images/icon-arrow.svg" alt="submit" />
+        </button>
+      </>
+
+      <div id="info" aria-live="polite">
+        <div className="info-item">
+          <strong>IP Address:</strong> <span id="ip-address">{ipInfo.ip}</span>
+        </div>
+        <div className="info-item">
+          <strong>Location:</strong>{" "}
+          <span id="location">{ipInfo.location}</span>
+        </div>
+        <div className="info-item">
+          <strong>Timezone:</strong>{" "}
+          <span id="timezone">{ipInfo.timezone}</span>
+        </div>
+        <div className="info-item">
+          <strong>ISP:</strong> <span id="isp">{ipInfo.isp}</span>
+        </div>
+      </div>
+    </main>
+  );
 }
 
 export default App;
