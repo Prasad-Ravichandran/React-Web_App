@@ -5,16 +5,36 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>character-counter</title>
+    <link rel="stylesheeet" href="/src/styles.css" />
   </head>
   <body>
     <main>
       <header class="header">
-        <img src="./src/images/logo-dark-theme.svg" alt="" />
+        <img src="./src/images/logo-dark-theme.svg" />
         <button id="theme-toggler">
           <img src="./src/images/icon-sun.svg" />
         </button>
       </header>
     </main>
+    <div>
+      <h1 id="heading1">Analyze your text</h1>
+      <h2 id="heading2">in real-time.</h2>
+      <textarea
+        id="textfield"
+        placeholder="Start typing here...(or paste your text)"
+      ></textarea>
+      <div class="counters">
+        Char:<span id="char">0</span> Word:<span id="word">0</span>
+        Sentence:<span id="sentence">0</span>
+      </div>
+      <div class="task2">
+        <input type="checkbox" id="space" />
+        <label for="space">Exclude Spaces</label>
+        <input type="checkbox" id="limit" />
+        <label for="limit">Set character limit</label>
+        <!-- <label id="time">Approx. reading time: <span>0</span></label> -->
+      </div>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -17,7 +17,6 @@ body,
 html {
   width: 100vw;
   height: 100vh;
-
   background-image: var(--bg-dark-img);
   background-size: cover;
 }
@@ -25,7 +24,6 @@ html {
 main {
   width: 100%;
   height: 100%;
-
   max-width: 1000px;
   margin: auto;
 }
@@ -33,14 +31,14 @@ main {
 header {
   display: flex;
   flex-direction: row;
-
   justify-content: space-between;
   align-items: center;
-
   padding-top: 30px;
+  position: relative;
+  z-index: 999;
 }
 
-header > button {
+button {
   background-color: var(--toggle-button-dark);
 
   border: none;
@@ -48,4 +46,114 @@ header > button {
   border-radius: 5px;
 
   cursor: pointer;
+}
+
+h1 {
+  font-size: 50px;
+  background-image: linear-gradient(
+    to right,
+    var(--toggle-button-light),
+    var(--toggle-button-light)
+  );
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  align-items: flex-start;
+  height: 100vh;
+  width: 100vw;
+  padding: 90px;
+  pointer-events: none;
+  z-index: 2;
+}
+h2 {
+  font-size: 50px;
+  background-image: linear-gradient(
+    to right,
+    var(--toggle-button-light),
+    var(--toggle-button-light)
+  );
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  padding: 140px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+textarea {
+  background-color: #242b37f1;
+  color: var(--toggle-button-light);
+  height: 25vh;
+  width: 80vw;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  resize: none;
+}
+
+.counters {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-image: linear-gradient(to top, rgb(240, 7, 46) 0%, #0b54dc 100%);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  position: absolute;
+  padding: 20px;
+  top: 70%;
+  left: 30%;
+  right: 30%;
+  font-size: 30px;
+}
+
+#char,
+#word {
+  margin-right: 50px;
+}
+
+.task2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  position: absolute;
+  left: 140px;
+  top: 62%;
+  font-size: 15px;
+}
+#space {
+  position: relative;
+  border: none;
+  border-radius: 4px;
+  padding-right: 20px;
+}
+
+.task2 label {
+  color: var(--toggle-button-light);
+  cursor: pointer;
+}
+
+#time {
+  left: 130%;
+  position: relative;
 }
