@@ -88,7 +88,7 @@ npm run preview
 - The component cleans up the Leaflet map on unmount with `map.remove()`.
 
 ## IP Location Tracker — Demo
-[Click Video](https://github.com/Prasad-Ravichandran/React-Ip-Address/blob/ipaddress/src/assets/videos/Demo.mp4)
+[Click to Watch](https://github.com/Prasad-Ravichandran/React-Web_App/blob/ipaddress/src/assets/videos/Demo.mp4)
 
 ## Styling and assets
 
